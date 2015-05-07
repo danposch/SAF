@@ -3,7 +3,7 @@
 Install Guide (testet on Ubuntu 14.04 64bit)
 
 # Dependencies:
-		* Boost    
+		* Boost >= 1.49
 		* NS3
 		* NDN-CXX
     * ndnSim2.x (see http://ndnsim.net/2.0/getting-started.html)
@@ -19,14 +19,13 @@ Install Guide (testet on Ubuntu 14.04 64bit)
 # Building:
 
 		# Create ndnSIM install folder
-    * mkdir ndnSIM
-    * cd ndnSIM
+		* mkdir ndnSIM
+		* cd ndnSIM
 
-    # Fetch required projects
-
-    * git clone https://github.com/named-data/ndn-cxx.git ndn-cxx	
- 		* git clone https://github.com/cawka/ns-3-dev-ndnSIM.git ns-3
-    * git clone https://github.com/cawka/pybindgen.git pybindgen
+		# Fetch required projects
+		* git clone https://github.com/named-data/ndn-cxx.git ndn-cxx	
+		* git clone https://github.com/cawka/ns-3-dev-ndnSIM.git ns-3
+		* git clone https://github.com/cawka/pybindgen.git pybindgen
 		* git clone https://github.com/named-data/ndnSIM.git ns-3/src/ndnSIM
 		* git clone https://github.com/danposch/SAF.git
 
@@ -34,24 +33,24 @@ Install Guide (testet on Ubuntu 14.04 64bit)
 		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.cpp
 
 		# Build NDN-CXX
-    * cd ndn-cxx
-    * ./waf configure
-    * ./waf
-    * sudo ./waf install
-    * cd ../
+		* cd ndn-cxx
+		* ./waf configure
+		* ./waf
+		* sudo ./waf install
+		* cd ../
 
-    # Build NS-3 + ndnSIM2.x
-    * cd ns-3
-    * ./waf configure -d optimized
-    * ./waf
-    * sudo ./waf install
-    * cd ../
+		# Build NS-3 + ndnSIM2.x
+		* cd ns-3
+		* ./waf configure -d optimized
+		* ./waf
+		* sudo ./waf install
+		* cd ../
 
-    # Build SAF scenario
-    * cd SAF
-    * ./waf configure
-    * ./waf 
-		
+		# Build SAF scenario
+		* cd SAF
+		* ./waf configure
+		* ./waf 
+
 		# Run example scenario
 		* ./waf --run "simple-saf" --vis
 
