@@ -1,4 +1,4 @@
-#Stochastic Adaptive Forwarding in NDN
+#Stochastic Adaptive Forwarding for NDN
 
 Install Guide (testet on Ubuntu 14.04 64bit)
 
