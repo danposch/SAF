@@ -29,6 +29,14 @@ Install Guide (testet on Ubuntu 14.04 64bit)
 		* git clone https://github.com/named-data/ndnSIM.git ns-3/src/ndnSIM
 		* git clone https://github.com/danposch/SAF.git
 
+	# (OPTIONAL) checkout verified compatible versions to SAF project
+		* cd ndn-cxx
+		* git checkout ndn-cxx-0.3.2
+		* cd ../
+		* cd ns-3/src/ndnSIM
+		* git checkout ndnSIM-2.0
+		* cd ../../../
+
 	# Patch NFD forwarder required for SAF
 		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.cpp
 
