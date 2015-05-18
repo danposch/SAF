@@ -34,7 +34,7 @@ Install Guide (testet on Ubuntu 14.04 64bit)
 		* git checkout ndn-cxx-0.3.2
 		* cd ../
 		* cd ns-3/src/ndnSIM
-		* git checkout ndnSIM-2.0
+		* git checkout a5587caa724bbe0db85c8511649faf9e06f97754
 		* cd ../../../
 
 	# Patch NFD forwarder required for SAF
