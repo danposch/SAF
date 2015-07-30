@@ -241,7 +241,7 @@ Forwarder::onOutgoingInterest(shared_ptr<pit::Entry> pitEntry, Face& outFace,
     interest = const_pointer_cast<Interest>(
       pickedInRecord->getInterest().shared_from_this());
   }
-  else // in this case no onRecod exists for the interest. we still could send but for now drop it
+  else // in this case no inRecod exists for the interest. we still could send but for now drop it
   {
     return;
     interest = const_pointer_cast<Interest>(

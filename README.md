@@ -39,6 +39,7 @@ Install Guide (testet on Ubuntu 14.04 64bit)
 
 	# Patch NFD forwarder required for SAF
 		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.cpp
+		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.hpp
 
 	# Build NDN-CXX
 		* cd ndn-cxx
