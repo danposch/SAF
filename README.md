@@ -2,6 +2,11 @@
 
 Install Guide (testet on Ubuntu 14.04 64bit)
 
+This repository provides Stochastic Adaptive Forwarding for ns3/ndnSIMv2.0.
+Besides that, we have implemented two competitors (iNRR and RFA) also available in this repository.
+
+The code is provided under the GNU General Public License Version 3.
+
 # Dependencies:
 	* Boost >= 1.49
 	* NS3
