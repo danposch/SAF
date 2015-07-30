@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
   ndnHelper.Install (routers);
 
-  //install SAF on routers
+  //install RFA on routers
   ns3::ndn::StrategyChoiceHelper::Install<nfd::fw::OMCCRF>(routers,"/");
 
   // Install NDN applications
