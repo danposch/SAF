@@ -34,7 +34,7 @@ The code is provided under the GNU General Public License Version 3.
 		* git clone https://github.com/named-data/ndnSIM.git ns-3/src/ndnSIM
 		* git clone https://github.com/danposch/SAF.git
 
-	# (OPTIONAL) checkout verified compatible versions to SAF project
+	# (RECOMMENDED) checkout verified compatible versions to SAF project
 		* cd ndn-cxx
 		* git checkout ndn-cxx-0.3.2
 		* cd ../
