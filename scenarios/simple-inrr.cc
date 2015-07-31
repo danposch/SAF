@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
   ndnHelper.Install (inrr_nodes);
 
   //install iNRR on routers and clients
-	for(int i = 0; i < inrr_nodes.size(); i++)
+  for(unsigned int i = 0; i < inrr_nodes.size(); i++)
 	{
 		//we use NS3 names to globally make the nodes available as well as their forwards.
 		//its a hack, but its the only way ns3/ndnSIM allows to implement an oracle.

@@ -546,7 +546,7 @@ matrix<double> SAFForwardingTable::removeFaceFromTable (int faceId, matrix<doubl
   {
     for (unsigned i = 0; i < tab.size1 (); ++i) /* rows */
     {
-      if(i < faceRow)
+      if(i < (unsigned int) faceRow)
       {
         m(i,j) = tab(i,j);
       }
@@ -554,7 +554,7 @@ matrix<double> SAFForwardingTable::removeFaceFromTable (int faceId, matrix<doubl
       {
         // skip i-th row.
       }*/
-      else if (i > faceRow)
+      else if (i > (unsigned int) faceRow)
       {
         m(i-1,j) = tab(i,j);
       }
@@ -604,7 +604,7 @@ int SAFForwardingTable::chooseFaceAccordingProbability(matrix<double> m, int ila
     return DROP_FACE_ID;
   }
 
-  for(int i = 0; i < m.size1 (); i++)
+  for(unsigned int i = 0; i < m.size1 (); i++)
   {
     sum += m(i, ilayer);
     if(rvalue <= sum)

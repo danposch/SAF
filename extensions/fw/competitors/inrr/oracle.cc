@@ -41,7 +41,7 @@ void Oracle::afterReceiveInterest(const Face& inFace, const Interest& interest ,
   int smallestHopCost = INT_MAX;
   std::vector< fib::NextHop > nextHops = fibEntry->getNextHops();
 
-  for(int i = 0; i < nextHops.size (); i++)
+  for(unsigned int i = 0; i < nextHops.size (); i++)
   {
     if( ((int) nextHops.at (i).getCost()) < smallestHopCost)
     {
@@ -53,7 +53,7 @@ void Oracle::afterReceiveInterest(const Face& inFace, const Interest& interest ,
   //find the shortest path towards a cache that is shorter than the path to content source
   std::vector<ns3::Ptr<ns3::Node> > visitedNodes;
   std::vector<ns3::ndn::NetDeviceFace* > inFaces = getAllInNetDeviceFaces (pitEntry);
-  for(int i = 0; i < inFaces.size (); i++)
+  for(unsigned int i = 0; i < inFaces.size (); i++)
     visitedNodes.push_back (getCounterpart (inFaces.at (i), node));
 
   std::vector<ns3::Ptr<ns3::Node> > relevantNodes;
@@ -74,7 +74,7 @@ void Oracle::afterReceiveInterest(const Face& inFace, const Interest& interest ,
   nextHops = fe->getNextHops();
   indexShortestHop = 0;
   smallestHopCost = INT_MAX;
-  for(int i = 0; i < nextHops.size (); i++)
+  for(unsigned int i = 0; i < nextHops.size (); i++)
   {
     if( ((int) nextHops.at (i).getCost()) < smallestHopCost)
     {
@@ -94,11 +94,11 @@ ns3::Ptr<ns3::Node> Oracle::findNearestReplica(std::vector<ns3::Ptr<ns3::Node> >
   std::vector<ns3::Ptr<ns3::Node> > newRelevantNodes; // new relevent hops for iteration i+1
   std::vector<ns3::Ptr<ns3::Node> > cacheHits; // nodes with a chache hit
 
-  for(int i = 0; i < relevantNodes.size (); i++) //check all relevant nodes
+  for(unsigned int i = 0; i < relevantNodes.size (); i++) //check all relevant nodes
   {
     std::vector<ns3::Ptr<ns3::NetDevice> > devices = getAllNetDevicesFromNode(relevantNodes.at (i));
 
-    for(int k = 0; k < devices.size (); k++) // get all devices
+    for(unsigned int k = 0; k < devices.size (); k++) // get all devices
     {
       ns3::Ptr<ns3::Node> counterPart = getCounterpart (devices.at (k), relevantNodes.at (i)); // get the counterpart node
       //check if counterPart has been visited
@@ -152,7 +152,7 @@ std::vector<ns3::Ptr<ns3::NetDevice> > Oracle::getAllNetDevicesFromNode(ns3::Ptr
 {
   std::vector<ns3::Ptr<ns3::NetDevice> > devs;
 
-  for(int i = 0; i < node->GetNDevices (); i++)
+  for(unsigned int i = 0; i < node->GetNDevices (); i++)
       devs.push_back (node->GetDevice (i));
 
   return devs;

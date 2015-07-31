@@ -34,7 +34,7 @@ void OMCCRF::afterReceiveInterest(const Face& inFace, const Interest& interest ,
 
     //add all new hops
     std::vector<fib::NextHop> nhops = fibEntry->getNextHops ();
-    for(int i = 0; i < nhops.size(); i++)
+    for(unsigned int i = 0; i < nhops.size(); i++)
     {
       pmap[prefix][nhops.at (i).getFace()->getId()] = boost::shared_ptr<PIC>(new PIC());
     }
@@ -113,7 +113,7 @@ void OMCCRF::beforeExpirePendingInterest(shared_ptr< pit::Entry > pitEntry)
 
   std::vector<int> faces = getAllOutFaces (pitEntry);
 
-  for(int i = 0; i < faces.size (); i++)
+  for(unsigned int i = 0; i < faces.size (); i++)
   {
     boost::shared_ptr<PIC> p = findPICEntry((*faces.begin ()), extractContentPrefix (pitEntry->getName ()));
     if(p != NULL)

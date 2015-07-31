@@ -139,7 +139,7 @@ std::string SAFEngine::extractContentPrefix(nfd::Name name)
   //fprintf(stderr, "extracting from %s\n", name.toUri ().c_str ());
 
   std::string prefix = "";
-  for(int i=0; i <= prefixComponentNumber; i++)
+  for(unsigned int i=0; i <= prefixComponentNumber; i++)
   {
     prefix.append ("/");
     prefix.append (name.get (i).toUri ());
