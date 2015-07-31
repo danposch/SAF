@@ -196,7 +196,7 @@ bool Oracle::checkCacheHit(shared_ptr<pit::Entry> pitEntry, ns3::Ptr<ns3::Node> 
   }
   else
   {
-   shared_ptr<Data> csMatch = csFromNdnSim->Lookup(make_shared<Interest>(interest));
+   shared_ptr<Data> csMatch = csFromNdnSim->Lookup(make_shared<Interest>(interest), false);
    if(csMatch != nullptr)
      return true;
   }
