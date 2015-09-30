@@ -20,7 +20,6 @@
 
 #include "face/face.hpp"
 #include "fw/strategy.hpp"
-
 #include "boost/shared_ptr.hpp"
 #include "safengine.h"
 
@@ -48,9 +47,22 @@ protected:
   std::vector<int> getAllInFaces(shared_ptr<pit::Entry> pitEntry);
   std::vector<int> getAllOutFaces(shared_ptr<pit::Entry> pitEntry);
 
+  bool isRtx(const nfd::Face& inFace, const ndn::Interest&interest);
+  void addToKnownInFaces(const nfd::Face& inFace, const ndn::Interest&interest);
+  void clearKnownFaces(const ndn::Interest&interest);
+
   boost::shared_ptr<SAFEngine> engine;
+
+  typedef std::map<
+  std::string /*interest name*/,
+  std::list<int> /*known infaces*/
+  > KnownInFaceMap;
+
+  KnownInFaceMap inFaceMap;
+
 };
 
 }
 }
 #endif // SAF_H
+

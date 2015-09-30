@@ -21,6 +21,8 @@ void SAF::afterReceiveInterest(const Face& inFace, const Interest& interest ,sha
   /* Attention!!! interest != pitEntry->interest*/ // necessary to emulate NACKs in ndnSIM2.0
   /* interst could be /NACK/suffix, while pitEntry->getInterest is /suffix */
 
+  //fprintf(stderr, "In f[%d]= %s\n", inFace.getId (),interest.getName ().toUri ().c_str ());
+
   //find + exclude inface(s) and already tried outface(s)
   std::vector<int> originInFaces = getAllInFaces(pitEntry);
   std::vector<int> alreadyTriedFaces; // keep them empty for now and check if nack or retransmission?
@@ -29,9 +31,25 @@ void SAF::afterReceiveInterest(const Face& inFace, const Interest& interest ,sha
   if(prefix.compare("NACK") == 0)
   {
     //fprintf(stderr, "Received Nack %s on face[%d]\n", interest.getName().toUri().c_str(), inFace.getId ());
-    engine->logNack(inFace, pitEntry->getInterest());
+    //engine->logNack(inFace, pitEntry->getInterest()); //this is not needed anymore as we count this on beforeStatisfyInterest/rejectInterest
     alreadyTriedFaces = getAllOutFaces(pitEntry);
   }
+  else if(pitEntry->hasUnexpiredOutRecords()) //possible rtx or just the same request from a "different" source
+  {
+    if(isRtx(inFace, interest))
+    {
+      alreadyTriedFaces = getAllOutFaces(pitEntry); //definitely a rtx
+    }
+    else
+    {
+      addToKnownInFaces(inFace, interest); // other client/node requests same content
+      return;
+    }
+  }
+
+  //if it wasnt a nack log the inface
+  if(prefix.compare("NACK") != 0)
+    addToKnownInFaces(inFace, interest);
 
   const Interest int_to_forward = pitEntry->getInterest();
   int nextHop = engine->determineNextHop(int_to_forward, alreadyTriedFaces, fibEntry);
@@ -49,25 +67,38 @@ void SAF::afterReceiveInterest(const Face& inFace, const Interest& interest ,sha
       return;
     }
 
-    engine->logNack((*getFaceTable ().get(nextHop)), pitEntry->getInterest());
+    engine->logNack((*getFaceTable ().get(nextHop)), pitEntry->getInterest()); // this should be valid we never send the interest as limits forbids it
     alreadyTriedFaces.push_back (nextHop);
     nextHop = engine->determineNextHop(int_to_forward, alreadyTriedFaces, fibEntry);
   }
-  //fprintf(stderr, "Rejecting Interest %s\n", int_to_forward.getName ().toUri ().c_str ());
+
+  for(unsigned int i = 0; i < alreadyTriedFaces.size (); i++)
+  {
+    engine->logRejectedInterest (pitEntry, alreadyTriedFaces.at (i)); // log not satisfied on all tried faces
+  }
   engine->logRejectedInterest(pitEntry, nextHop);
+  clearKnownFaces(int_to_forward);
   rejectPendingInterest(pitEntry);
 }
 
 void SAF::beforeSatisfyInterest(shared_ptr<pit::Entry> pitEntry,const Face& inFace, const Data& data)
 {
+  const std::list<nfd::pit::OutRecord> outRecords = pitEntry->getOutRecords ();
+  for(nfd::pit::OutRecordCollection::const_iterator it = outRecords.begin (); it!=outRecords.end (); ++it)
+  {
+    if((*it).getFace()->getId() != inFace.getId ())
+      engine->logNack ((*getFaceTable ().get((*it).getFace()->getId())), pitEntry->getInterest()); //its not a nack but this log has the same effect
+  }
+
   engine->logSatisfiedInterest (pitEntry, inFace, data);
+  clearKnownFaces(pitEntry->getInterest());
   Strategy::beforeSatisfyInterest (pitEntry,inFace, data);
 }
 
 void SAF::beforeExpirePendingInterest(shared_ptr< pit::Entry > pitEntry)
 {
-  //fprintf(stderr, "Timeout %s\n", pitEntry->getInterest().getName().toUri().c_str());
   engine->logExpiredInterest(pitEntry);
+  clearKnownFaces(pitEntry->getInterest());
   Strategy::beforeExpirePendingInterest (pitEntry);
 }
 
@@ -94,4 +125,51 @@ std::vector<int> SAF::getAllOutFaces(shared_ptr<pit::Entry> pitEntry)
 
   return faces;
 }
+
+bool SAF::isRtx (const nfd::Face& inFace, const ndn::Interest& interest)
+{
+  KnownInFaceMap::iterator it = inFaceMap.find (interest.getName ().toUri());
+  if(it == inFaceMap.end ())
+    return false;
+
+  for(std::list<int>::iterator k = it->second.begin(); k != it->second.end(); k++)
+  {
+    if((*k) == inFace.getId ())
+      return true;
+  }
+
+  return false;
+}
+
+void SAF::addToKnownInFaces(const nfd::Face& inFace, const ndn::Interest&interest)
+{
+  KnownInFaceMap::iterator it = inFaceMap.find (interest.getName ().toUri());
+
+  if(it == inFaceMap.end ())
+    inFaceMap[interest.getName ().toUri ()] = std::list<int>();
+
+  std::list<int> list = inFaceMap[interest.getName ().toUri ()];
+
+  if(std::find(list.begin (),list.end (), inFace.getId()) == list.end ()) //if face not known as in face
+    inFaceMap[interest.getName ().toUri ()].push_back(inFace.getId());    //remember it
+}
+
+void SAF::clearKnownFaces(const ndn::Interest&interest)
+{
+  KnownInFaceMap::iterator it = inFaceMap.find (interest.getName ().toUri());
+
+  if(it == inFaceMap.end ())
+  {
+    //This may happen due to bad behavior of NDN core code!
+    //beforeSatisfyInterest may be called multiple times for 1 pit entry..
+    return;
+  }
+  inFaceMap.erase (it);
+}
+
+/*ndn::time::steady_clock::time_point last = (*it).getLastRenewed();
+ndn::time::steady_clock::time_point now = ndn::time::steady_clock::now ();
+ndn::time::steady_clock::duration time_span = now - last;
+ndn::time::milliseconds ms = ndn::time::duration_cast<ndn::time::milliseconds>(time_span);
+fprintf(stderr, "Last Renewd[%d]: %llu\n",(*it).getFace()->getId(), ms.count ());*/
 
