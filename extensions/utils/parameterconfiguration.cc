@@ -11,6 +11,7 @@ ParameterConfiguration::ParameterConfiguration()
   setParameter ("RELIABILITY_THRESHOLD_MIN", P_RELIABILITY_THRESHOLD_MIN);
   setParameter ("RELIABILITY_THRESHOLD_MAX", P_RELIABILITY_THRESHOLD_MAX);
   setParameter ("HISTORY_SIZE",P_HISTORY_SIZE);
+  setParameter ("PREFIX_COMPONENT", P_PREFIX_COMPONENT);
 }
 
 

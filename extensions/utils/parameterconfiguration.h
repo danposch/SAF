@@ -30,6 +30,7 @@
 #define P_RELIABILITY_THRESHOLD_MIN 0.75 // the minimum required reliablity
 #define P_RELIABILITY_THRESHOLD_MAX 0.999 // the maximum enforced reliability
 #define P_HISTORY_SIZE 6 // sample size of the windows for the statisticmeasure class.
+#define P_PREFIX_COMPONENT 0 // component that seperates the prefix from the remaining name
 
 //some additional defines
 #define DROP_FACE_ID -1

@@ -8,8 +8,7 @@ const Name SAF::STRATEGY_NAME("ndn:/localhost/nfd/strategy/saf");
 SAF::SAF(Forwarder &forwarder, const Name &name) : Strategy(forwarder, name)
 {
   const FaceTable& ft = getFaceTable();
-  int prefixComponets = 0;
-  engine = boost::shared_ptr<SAFEngine>(new SAFEngine(ft, prefixComponets));
+  engine = boost::shared_ptr<SAFEngine>(new SAFEngine(ft, (int) ParameterConfiguration::getInstance ()->getParameter ("PREFIX_COMPONENT")));
 }
 
 SAF::~SAF()

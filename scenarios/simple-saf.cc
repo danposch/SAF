@@ -20,6 +20,7 @@
 #include "ns3/ndn-all.hpp"
 
 #include "../extensions/fw/saf.h"
+#include "../extensions/utils/parameterconfiguration.h"
 
 using namespace ns3;
 
@@ -60,6 +61,9 @@ int main(int argc, char* argv[])
   ndnHelper.Install (provider1);
 
   ndnHelper.Install (routers);
+
+	//set prefix components for forwarding
+	ParameterConfiguration::getInstance()->setParameter("PREFIX_COMPONENT", 0); // set to prefix component 0
 
   //install SAF on routers
   ns3::ndn::StrategyChoiceHelper::Install<nfd::fw::SAF>(routers,"/");
