@@ -7,6 +7,7 @@ const Name OMCCRF::STRATEGY_NAME("ndn:/localhost/nfd/strategy/omccrf");
 
 OMCCRF::OMCCRF(Forwarder &forwarder, const Name &name) : Strategy(forwarder, name)
 {
+  prefixComponents = ParameterConfiguration::getInstance ()->getParameter ("PREFIX_COMPONENT");
 }
 
 OMCCRF::~OMCCRF()
@@ -162,7 +163,7 @@ boost::shared_ptr<PIC> OMCCRF::findPICEntry(int face_id, std::string prefix)
 std::string OMCCRF::extractContentPrefix(nfd::Name name)
 {
   std::string prefix = "";
-  for(int i=0; i <= PREFIX_COMPONENT; i++)
+  for(int i=0; i <= prefixComponents; i++)
   {
     prefix.append ("/");
     prefix.append (name.get (i).toUri ());
@@ -234,3 +235,4 @@ void OMCCRF::clearKnownFaces(const ndn::Interest&interest)
   }
   inFaceMap.erase (it);
 }
+

@@ -61,6 +61,9 @@ int main(int argc, char* argv[])
 
   ndnHelper.Install (routers);
 
+	//set prefix components for forwarding
+	ParameterConfiguration::getInstance()->setParameter("PREFIX_COMPONENT", 0); // set to prefix component 0
+
   //install RFA on routers
   ns3::ndn::StrategyChoiceHelper::Install<nfd::fw::OMCCRF>(routers,"/");
 
