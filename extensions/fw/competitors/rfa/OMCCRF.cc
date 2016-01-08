@@ -25,6 +25,17 @@ void OMCCRF::afterReceiveInterest(const Face& inFace, const Interest& interest ,
     return;
   }
 
+  if(pitEntry->hasUnexpiredOutRecords()) //possible rtx or just the same request from a "different" source
+    {
+      if(!isRtx(inFace, interest))
+      {
+        addToKnownInFaces(inFace, interest); // other client/node requests same content
+        return; // this aggregates the interest
+      }
+      //else just continue as it was a normal interest..
+    }
+  addToKnownInFaces(inFace, interest);
+
   std::string prefix = extractContentPrefix(pitEntry->getInterest().getName());
 
   if(pmap.find (prefix) == pmap.end ()) //check if prefix is listed if not create it
@@ -104,7 +115,7 @@ void OMCCRF::beforeSatisfyInterest(shared_ptr<pit::Entry> pitEntry,const Face& i
     p->decrease ();
     p->update ();
   }
-
+  clearKnownFaces(pitEntry->getInterest());
   Strategy::beforeSatisfyInterest (pitEntry,inFace, data);
 }
 
@@ -122,7 +133,7 @@ void OMCCRF::beforeExpirePendingInterest(shared_ptr< pit::Entry > pitEntry)
       p->update ();
     }
   }
-
+  clearKnownFaces(pitEntry->getInterest());
   Strategy::beforeExpirePendingInterest (pitEntry);
 }
 
@@ -181,4 +192,45 @@ std::vector<int> OMCCRF::getAllInFaces(shared_ptr<pit::Entry> pitEntry)
       faces.push_back((*it).getFace()->getId());
   }
   return faces;
+}
+
+bool OMCCRF::isRtx (const nfd::Face& inFace, const ndn::Interest& interest)
+{
+  KnownInFaceMap::iterator it = inFaceMap.find (interest.getName ().toUri());
+  if(it == inFaceMap.end ())
+    return false;
+
+  for(std::list<int>::iterator k = it->second.begin(); k != it->second.end(); k++)
+  {
+    if((*k) == inFace.getId ())
+      return true;
+  }
+
+  return false;
+}
+
+void OMCCRF::addToKnownInFaces(const nfd::Face& inFace, const ndn::Interest&interest)
+{
+  KnownInFaceMap::iterator it = inFaceMap.find (interest.getName ().toUri());
+
+  if(it == inFaceMap.end ())
+    inFaceMap[interest.getName ().toUri ()] = std::list<int>();
+
+  std::list<int> list = inFaceMap[interest.getName ().toUri ()];
+
+  if(std::find(list.begin (),list.end (), inFace.getId()) == list.end ()) //if face not known as in face
+    inFaceMap[interest.getName ().toUri ()].push_back(inFace.getId());    //remember it
+}
+
+void OMCCRF::clearKnownFaces(const ndn::Interest&interest)
+{
+  KnownInFaceMap::iterator it = inFaceMap.find (interest.getName ().toUri());
+
+  if(it == inFaceMap.end ())
+  {
+    //This may happen due to bad behavior of NDN core code!
+    //beforeSatisfyInterest may be called multiple times for 1 pit entry..
+    return;
+  }
+  inFaceMap.erase (it);
 }

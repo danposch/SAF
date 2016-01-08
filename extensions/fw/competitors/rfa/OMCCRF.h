@@ -15,8 +15,6 @@
  * ndnSIM, e.g., in COPYING.md file.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-/* Implements the Request Forwarding Strategy from the paper: Optimal multipath congestion control and request forwarding in Information-Centric Networks*/
-
 #ifndef OMCCRF_H
 #define OMCCRF_H
 
@@ -69,6 +67,17 @@ protected:
   PrefixMap pmap;
 
   ns3::UniformVariable randomVariable;
+
+  typedef std::map<
+  std::string /*interest name*/,
+  std::list<int> /*known infaces*/
+  > KnownInFaceMap;
+
+  KnownInFaceMap inFaceMap;
+
+  bool isRtx(const nfd::Face& inFace, const ndn::Interest&interest);
+  void addToKnownInFaces(const nfd::Face& inFace, const ndn::Interest&interest);
+  void clearKnownFaces(const ndn::Interest&interest);
 };
 
 
