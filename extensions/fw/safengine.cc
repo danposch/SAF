@@ -23,7 +23,8 @@ void SAFEngine::initFaces(const nfd::FaceTable& table)
 
   for(nfd::FaceTable::const_iterator it = table.begin (); it != table.end (); ++it)
   {
-    if((*it)->isLocal())
+    //if((*it)->isLocal())
+    if((*it)->getId() <= nfd::FACEID_RESERVED_MAX) //SAF is not used for management faces
       continue;
     faces.push_back((*it)->getId());
     fbMap[(*it)->getId()] = boost::shared_ptr<FaceLimitManager>(new FaceLimitManager(*it));
@@ -108,6 +109,10 @@ void SAFEngine::logExpiredInterest(shared_ptr< pit::Entry > pitEntry)
 
 void SAFEngine::logNack(const Face& inFace, const Interest& interest)
 {
+  //fprintf(stderr, "inFace=%d\n", inFace.getId ());
+  //fprintf(stderr, "interest=%s\n", interest.getName ().toUri ().c_str ());
+  //fprintf(stderr, "nodeName=%s\n\n", nodeName.c_str ());
+
   //log the nack
   std::string prefix = extractContentPrefix(interest.getName());
   SAFEntryMap::iterator it = entryMap.find (prefix);
@@ -117,11 +122,11 @@ void SAFEngine::logNack(const Face& inFace, const Interest& interest)
     it->second->logNack(inFace, interest);
 
   //return the token?
-  SAFEntryMap::iterator i = entryMap.find (prefix);
-  if(i == entryMap.end ())
+  FaceLimitMap::iterator i = fbMap.find (inFace.getId ());
+  if(i == fbMap.end ())
     fprintf(stderr,"Error in SAFEntryLookUp\n");
   else
-    return fbMap[inFace.getId ()]->receivedNack(prefix);
+    fbMap[inFace.getId ()]->receivedNack(prefix);
 }
 
 void SAFEngine::logRejectedInterest(shared_ptr<pit::Entry> pitEntry, int face_id)
@@ -158,4 +163,43 @@ void SAFEngine::determineNodeName(const nfd::FaceTable& table)
     }
   }
   nodeName = "UnknownNode";
+}
+
+void SAFEngine::addFace(shared_ptr<Face> face)
+{
+  if(face->getId() <= nfd::FACEID_RESERVED_MAX) //SAF is not used for management faces
+    return;
+
+  faces.push_back(face->getId());
+
+  std::vector<std::string> registeredPrefixes;
+  if(fbMap.size () > 0)
+  {
+    registeredPrefixes = fbMap.begin ()->second->getAllRegisteredPrefixs();
+  }
+  fbMap[face->getId()] = boost::shared_ptr<FaceLimitManager>(new FaceLimitManager(face));
+  for(unsigned int i=0; i < registeredPrefixes.size (); i++)
+    fbMap[face->getId()]->addNewPrefix(registeredPrefixes.at (i));
+
+  std::sort(faces.begin(), faces.end());
+  for(SAFEntryMap::iterator it = entryMap.begin (); it != entryMap.end (); ++it)
+  {
+    it->second->addFace(face);
+  }
+}
+
+void SAFEngine::removeFace(shared_ptr<Face> face)
+{
+  if(face->getId() <= nfd::FACEID_RESERVED_MAX) //SAF is not used for management faces
+    return;
+
+  for(SAFEntryMap::iterator it = entryMap.begin (); it != entryMap.end (); ++it)
+  {
+    it->second->removeFace(face);
+  }
+
+  faces.erase(std::find(faces.begin (), faces.end (), face->getId()));
+  fbMap.erase (face->getId());
+  std::sort(faces.begin(), faces.end());
+
 }

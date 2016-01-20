@@ -43,10 +43,13 @@ class FaceLimitManager
 {
 public:
   FaceLimitManager(shared_ptr< Face > face);
+  ~FaceLimitManager();
 
   bool addNewPrefix(std::string content_prefix);
   bool tryForwardInterest(std::string prefix);
   void receivedNack(std::string prefix);
+
+  std::vector<std::string> getAllRegisteredPrefixs();
 
 protected:
 

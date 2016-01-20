@@ -237,3 +237,49 @@ double SAFStatisticMeasure::getRho(int layer)
   //fprintf(stderr, "sum_satisfied = %f; total_forwarded=%d\n", sum_satisfied, stats[layer].total_forwarded_requests);
   return 1.0 - (sum_satisfied / stats[layer].total_forwarded_requests);
 }
+
+void SAFStatisticMeasure::addFace(shared_ptr<Face> face)
+{
+
+  int face_id = face->getId();
+
+  for(int layer=0; layer < (int)ParameterConfiguration::getInstance ()->getParameter ("MAX_LAYERS"); layer ++) // for each layer
+  {
+    //init stats for face
+    stats[layer].unsatisfied_requests[face_id] = 0;
+    stats[layer].satisfied_requests[face_id] = 0;
+
+    stats[layer].last_reliability[face_id] = 0;
+    stats[layer].last_actual_forwarding_probs[face_id] = 0;
+    stats[layer].satisfaction_variance[face_id] = INIT_VARIANCE;// a high value
+    stats[layer].last_unsatisfied_requests[face_id] = 0;
+    stats[layer].last_satisfied_requests[face_id] = 0;
+    stats[layer].ema_alpha[face_id] = 0.0;
+  }
+
+  // push face back
+  faces.push_back (face_id);
+
+}
+
+void SAFStatisticMeasure::removeFace(shared_ptr<Face> face)
+{
+
+  int id = face->getId();
+  //remove face
+  faces.erase(std::find(faces.begin (), faces.end (), id));
+
+  for(int layer=0; layer < (int)ParameterConfiguration::getInstance ()->getParameter ("MAX_LAYERS"); layer ++) // for each layer
+  {
+    //init stats for face
+    stats[layer].unsatisfied_requests.erase(id);
+    stats[layer].satisfied_requests.erase(id);
+
+    stats[layer].last_reliability.erase(id);
+    stats[layer].last_actual_forwarding_probs.erase(id);
+    stats[layer].satisfaction_variance.erase(id);
+    stats[layer].last_unsatisfied_requests.erase(id);
+    stats[layer].last_satisfied_requests.erase(id);
+    stats[layer].ema_alpha.erase(id);
+  }
+}

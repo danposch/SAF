@@ -77,6 +77,18 @@ public:
    */
   std::map<int /*layer*/,double/*reliabilty*/> getCurrentReliability(){return this->curReliability;}
 
+  /**
+   * @brief addFace
+   * @param face
+   */
+  void addFace(shared_ptr<Face> face);
+
+  /**
+   * @brief removeFace
+   * @param face
+   */
+  void removeFace(shared_ptr<Face> face);
+
   protected:
   void initTable();
   std::map<int, double> calcInitForwardingProb(std::map<int, int> preferedFacesIds, double gamma);

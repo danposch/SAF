@@ -90,6 +90,18 @@ public:
    */
   void logRejectedInterest(shared_ptr<pit::Entry> pitEntry, int face_id);
 
+  /**
+   * @brief addFace
+   * @param face
+   */
+  void addFace(shared_ptr<Face> face);
+
+  /**
+   * @brief removeFace
+   * @param face
+   */
+  void removeFace(shared_ptr<Face> face);
+
 protected:
   void initFaces(const nfd::FaceTable& table);
   std::string extractContentPrefix(nfd::Name name);

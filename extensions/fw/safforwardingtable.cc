@@ -653,3 +653,70 @@ void SAFForwardingTable::updateReliabilityThreshold(int layer, bool increase)
 
   curReliability[layer] = new_t;
 }
+
+void SAFForwardingTable::addFace(shared_ptr<Face> face)
+{
+  faces.push_back (face->getId());
+  std::sort(faces.begin(), faces.end());//order
+
+  matrix<double> m (table.size1 () + 1, table.size2 ());
+
+  int faceRow = determineRowOfFace (face->getId(), m, faces);
+
+  for (unsigned int j = 0; j < table.size2 (); ++j) /* columns */
+  {
+    for (unsigned int i = 0; i < table.size1 (); ++i) /* rows */
+    {
+      if(i < (unsigned int) faceRow)
+      {
+        m(i,j) = table(i,j);
+      }
+      else if((unsigned int) faceRow == i)
+      {
+        //m(i,j) = 1.0 / (double)(faces.size () - 1);
+        m(i,j) = 0.0;
+      }
+      else if (i > (unsigned int) faceRow)
+      {
+        m(i+1,j) = table(i,j);
+      }
+    }
+    if( (unsigned int) faceRow == table.size1())
+      m(faceRow,j) = 0.0;
+  }
+  table = normalizeColumns (m);
+}
+
+void SAFForwardingTable::removeFace(shared_ptr<Face> face)
+{
+  int faceRow = determineRowOfFace (face->getId());
+
+  if(faceRow == FACE_NOT_FOUND)
+  {
+    NS_LOG_DEBUG("Could not remove Face from Table as it does not exist");
+    return;
+  }
+
+  matrix<double> m (table.size1 () - 1, table.size2 ());
+
+  for (unsigned int j = 0; j < table.size2 (); ++j) /* columns */
+  {
+    for (unsigned int i = 0; i < table.size1 (); ++i) /* rows */
+
+      if(i < (unsigned int) faceRow)
+      {
+        m(i,j) = table(i,j);
+      }
+      /*else if(faceRow == i)
+      {
+        // skip i-th row.
+      }*/
+      else if (i > (unsigned int) faceRow)
+      {
+        m(i-1,j) = table(i,j);
+      }
+    }
+
+  faces.erase(std::find(faces.begin (),faces.end (),face->getId()));
+  table = normalizeColumns (m);
+}

@@ -85,6 +85,18 @@ public:
    */
   void update();
 
+  /**
+   * @brief addFace
+   * @param face
+   */
+  void addFace(shared_ptr<Face> face);
+
+  /**
+   * @brief removeFace
+   * @param face
+   */
+  void removeFace(shared_ptr<Face> face);
+
 protected:
 
   void initFaces();

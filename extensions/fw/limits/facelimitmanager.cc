@@ -18,6 +18,11 @@ FaceLimitManager::FaceLimitManager(shared_ptr< Face > face)
   this->newTokenEvent = ns3::Simulator::Schedule(ns3::Seconds(0), &FaceLimitManager::newToken, this);
 }
 
+FaceLimitManager::~FaceLimitManager ()
+{
+  ns3::Simulator::Cancel(newTokenEvent);
+}
+
 bool FaceLimitManager::addNewPrefix(std::string content_prefix)
 {
   //use the basic limiter for now
@@ -91,4 +96,14 @@ bool FaceLimitManager::tryForwardInterest(std::string prefix)
 void FaceLimitManager::receivedNack(std::string prefix)
 {
   bMap[prefix]->addTokens(1.0 * NACK_RETURN_TOKEN);
+}
+
+std::vector<std::string> FaceLimitManager::getAllRegisteredPrefixs()
+{
+  std::vector<std::string> v;
+  for(LimitMap::iterator it = bMap.begin (); it!=bMap.end (); it++)
+  {
+    v.push_back (it->first);
+  }
+  return v;
 }

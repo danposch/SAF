@@ -100,3 +100,23 @@ bool SAFEntry::evaluateFallback()
 
   return fallback;
 }
+
+void SAFEntry::addFace(shared_ptr<Face> face)
+{
+  //no mutex needed we are in an event-based simulator
+
+  //pthread_mutex_lock( &mutex);
+  smeasure->addFace(face);
+  ftable->addFace (face);
+  //pthread_mutex_unlock( &mutex);
+}
+
+void SAFEntry::removeFace(shared_ptr<Face> face)
+{
+  //no mutex needed we are in an event-based simulator
+
+  //pthread_mutex_lock( &mutex);
+  ftable->removeFace (face);
+  smeasure->removeFace (face);
+  //pthread_mutex_unlock( &mutex);
+}

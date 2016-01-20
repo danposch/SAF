@@ -9,6 +9,16 @@ SAF::SAF(Forwarder &forwarder, const Name &name) : Strategy(forwarder, name)
 {
   const FaceTable& ft = getFaceTable();
   engine = boost::shared_ptr<SAFEngine>(new SAFEngine(ft, (int) ParameterConfiguration::getInstance ()->getParameter ("PREFIX_COMPONENT")));
+
+  this->afterAddFace.connect([this] (shared_ptr<Face> face)
+  {
+    engine->addFace (face);
+  });
+
+  this->beforeRemoveFace.connect([this] (shared_ptr<Face> face)
+  {
+    engine->removeFace (face);
+  });
 }
 
 SAF::~SAF()
@@ -166,9 +176,5 @@ void SAF::clearKnownFaces(const ndn::Interest&interest)
   inFaceMap.erase (it);
 }
 
-/*ndn::time::steady_clock::time_point last = (*it).getLastRenewed();
-ndn::time::steady_clock::time_point now = ndn::time::steady_clock::now ();
-ndn::time::steady_clock::duration time_span = now - last;
-ndn::time::milliseconds ms = ndn::time::duration_cast<ndn::time::milliseconds>(time_span);
-fprintf(stderr, "Last Renewd[%d]: %llu\n",(*it).getFace()->getId(), ms.count ());*/
-
+signal::Signal< FaceTable, shared_ptr< Face > > & afterAddFace();
+signal::Signal< FaceTable, shared_ptr< Face > > & beforeRemoveFace();
