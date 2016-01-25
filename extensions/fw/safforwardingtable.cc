@@ -248,14 +248,11 @@ void SAFForwardingTable::update(boost::shared_ptr<SAFStatisticMeasure> stats)
         //now shift traffic to r_faces
         for(std::vector<int>::iterator it = r_faces.begin(); it != r_faces.end(); ++it) // for each r_face
         {
-          NS_LOG_DEBUG("Face[" << *it <<"]: Adding (min_fraction*ts[" << *it << "] / I) / (ts_sum / I)="
-                     << "(" << min_fraction << "*" << ts[*it] << "/" << stats->getTotalForwardedInterests (layer) << ") / (" <<
-                     ts_sum << "/" << stats->getTotalForwardedInterests (layer) << ")=" <<
-                     (min_fraction * ts[*it] / (double) stats->getTotalForwardedInterests (layer))
-                     / (ts_sum / (double) stats->getTotalForwardedInterests (layer)));
+          NS_LOG_DEBUG("Face[" << *it <<"]: Adding (min_fraction*ts[" << *it << "]) / (ts_sum)="
+                     << "(" << min_fraction << "*" << ts[*it] << ") / (" <<
+                     ts_sum << ")=" << (min_fraction * ts[*it]) / ts_sum );
 
-          table(determineRowOfFace (*it),layer) += (min_fraction * ts[*it] / (double) stats->getTotalForwardedInterests (layer))
-              / (ts_sum / (double) stats->getTotalForwardedInterests (layer));
+          table(determineRowOfFace (*it),layer) += (min_fraction * ts[*it]) / (ts_sum);
         }
 
         utf -= min_fraction; //remove the shifted fraction from the utf
