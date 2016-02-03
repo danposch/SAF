@@ -31,6 +31,7 @@
 #define P_RELIABILITY_THRESHOLD_MAX 0.999 // the maximum enforced reliability
 #define P_HISTORY_SIZE 6 // sample size of the windows for the statisticmeasure class.
 #define P_PREFIX_COMPONENT 0 // component that seperates the prefix from the remaining name
+#define P_USE_RTX_DETECTION 0 // enables expiremental feature to distinguish rtx from interest aggregation
 
 //some additional defines
 #define DROP_FACE_ID -1
