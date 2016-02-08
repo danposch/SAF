@@ -125,6 +125,8 @@ public:
    */
   signal::Signal<Forwarder, pit::Entry> beforeExpirePendingInterest;
 
+  signal::Signal<Forwarder, Face, Data> beforeDroppingUnsolicitedData;
+
 PUBLIC_WITH_TESTS_ELSE_PRIVATE: // pipelines
   /** \brief incoming Interest pipeline
    */

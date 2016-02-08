@@ -241,7 +241,7 @@ Forwarder::onOutgoingInterest(shared_ptr<pit::Entry> pitEntry, Face& outFace,
     interest = const_pointer_cast<Interest>(
       pickedInRecord->getInterest().shared_from_this());
   }
-  else // in this case no inRecod exists for the interest. we still could send but for now drop it
+  else // in this case no onRecod exists for the interest. we still could send but for now drop it
   {
     return;
     interest = const_pointer_cast<Interest>(
@@ -386,6 +386,11 @@ Forwarder::onIncomingData(Face& inFace, const Data& data)
       }
     }
 
+    //added by dposch for omp-if implemntation
+    if(pendingDownstreams.size() == 0)
+      this->onDataUnsolicited(inFace, data);
+
+
     // invoke PIT satisfy callback
     beforeSatisfyInterest(*pitEntry, inFace, data);
     this->dispatchToStrategy(pitEntry, bind(&Strategy::beforeSatisfyInterest, _1,
@@ -430,6 +435,18 @@ Forwarder::onDataUnsolicited(Face& inFace, const Data& data)
   NFD_LOG_DEBUG("onDataUnsolicited face=" << inFace.getId() <<
                 " data=" << data.getName() <<
                 (acceptToCache ? " cached" : " not cached"));
+
+    shared_ptr<Interest> myInt = shared_ptr<Interest>(new Interest(data.getName())); // create dummy int
+
+    std::pair< shared_ptr< pit::Entry >, bool > entry = m_pit.insert(*myInt); // create dummy pit-entry
+    shared_ptr<pit::Entry> pitEntry = entry.first;
+    //shared_ptr<pit::Entry> pitEntry = shared_ptr<pit::Entry>( new pit::Entry(*myInt)); // create dummy pit-entry
+
+    beforeDroppingUnsolicitedData(inFace, data); //call fw-strategy
+    this->dispatchToStrategy(pitEntry, bind(&Strategy::onUnsolicitedData, _1, cref(inFace), cref(data)));
+
+    if(entry.second == true)
+      m_pit.erase(pitEntry); //delete dummy pitEntry
 }
 
 void

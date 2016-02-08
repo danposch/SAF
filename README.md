@@ -42,9 +42,11 @@ The code is provided under the GNU General Public License Version 3.
 		* git checkout a5587caa724bbe0db85c8511649faf9e06f97754
 		* cd ../../../
 
-	# Patch NFD forwarder required for SAF
+	# Patch NFD forwarder required for SAF and OMP-IF
 		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.cpp
 		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.hpp
+		* cp SAF/extern/strategy.cpp ns-3/src/ndnSIM/NFD/daemon/fw/strategy.cpp
+		* cp SAF/extern/strategy.hpp ns-3/src/ndnSIM/NFD/daemon/fw/strategy.hpp
 
 	# Patch ndnSIM content store for iNRR
 		* cp itec-ndn/extern/ndn-content-store.hpp ns-3/src/ndnSIM/model/cs/ndn-content-store.hpp
