@@ -62,8 +62,8 @@ int main(int argc, char* argv[])
 
   ndnHelper.Install (routers);
 
-	//set prefix components for forwarding
-	ParameterConfiguration::getInstance()->setParameter("PREFIX_COMPONENT", 0); // set to prefix component 0
+  //set prefix components for forwarding
+  ParameterConfiguration::getInstance()->setParameter("PREFIX_COMPONENT", 0); // set to prefix component 0
 
   //install SAF on routers
   ns3::ndn::StrategyChoiceHelper::Install<nfd::fw::SAF>(routers,"/");
@@ -71,8 +71,8 @@ int main(int argc, char* argv[])
   // Install NDN applications
   std::string prefix0 = "/provider0";
   std::string prefix1 = "/provider1";
-
-	//define measure per prefix
+  
+  //define measure per prefix
   nfd::fw::SAFMeasureFactory::getInstance ()->registerMeasure (prefix0, nfd::fw::SAFStatisticMeasure::MDelay); //use delay based measure
   nfd::fw::SAFMeasureFactory::getInstance ()->registerAttribute(prefix0, std::string("MaxDelayMS"), std::string("500")); // set max delay for prefix
   nfd::fw::SAFMeasureFactory::getInstance ()->registerMeasure (prefix1, nfd::fw::SAFStatisticMeasure::MThroughput); //use throughput based measure (default)
