@@ -43,7 +43,7 @@ void SAF::afterReceiveInterest(const Face& inFace, const Interest& interest ,sha
     //engine->logNack(inFace, pitEntry->getInterest()); //this is not needed anymore as we count this on beforeStatisfyInterest/rejectInterest
     alreadyTriedFaces = getAllOutFaces(pitEntry);
   }
-else if(pitEntry->hasUnexpiredOutRecords() && ParameterConfiguration::getInstance ()->getParameter ("RTX_DETECTION") > 0) //possible rtx or just the same request from a "different" source (experimental)
+  else if(pitEntry->hasUnexpiredOutRecords() && ParameterConfiguration::getInstance ()->getParameter ("RTX_DETECTION") > 0) //possible rtx or just the same request from a "different" source (experimental)
   {
     if(isRtx(inFace, interest))
     {

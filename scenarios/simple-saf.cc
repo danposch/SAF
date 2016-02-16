@@ -72,6 +72,11 @@ int main(int argc, char* argv[])
   std::string prefix0 = "/provider0";
   std::string prefix1 = "/provider1";
 
+	//define measure per prefix
+  nfd::fw::SAFMeasureFactory::getInstance ()->registerMeasure (prefix0, nfd::fw::SAFStatisticMeasure::MDelay); //use delay based measure
+  nfd::fw::SAFMeasureFactory::getInstance ()->registerAttribute(prefix0, std::string("MaxDelayMS"), std::string("500")); // set max delay for prefix
+  nfd::fw::SAFMeasureFactory::getInstance ()->registerMeasure (prefix1, nfd::fw::SAFStatisticMeasure::MThroughput); //use throughput based measure (default)
+
   //install consumer application on the streamers
   ns3::ndn::AppHelper consumerHelper ("ns3::ndn::ConsumerCbr");
   consumerHelper.SetAttribute ("Frequency", StringValue ("250")); //roughly 2Mbps

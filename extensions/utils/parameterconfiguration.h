@@ -24,12 +24,13 @@
 
 //default parameters can be overriden:
 #define P_LAMBDA 0.35 // rate to adapt reliability threshold
-#define P_UPDATE_INTERVALL 0.5 // duration of a period in seconds
+#define P_UPDATE_INTERVALL 1.0 // duration of a period in seconds
 #define P_MAX_LAYERS 1 //number of layers per content
 #define P_DROP_FACE_ID -1 // the id of the virtual dropping face
 #define P_RELIABILITY_THRESHOLD_MIN 0.75 // the minimum required reliablity
 #define P_RELIABILITY_THRESHOLD_MAX 0.999 // the maximum enforced reliability
 #define P_HISTORY_SIZE 6 // sample size of the windows for the statisticmeasure class.
+#define P_CONTENT_AWARE_ADAPTATION -1 // < 0 disabled, > 0 enabled.
 #define P_PREFIX_COMPONENT 0 // component that seperates the prefix from the remaining name
 #define P_USE_RTX_DETECTION 0 // enables expiremental feature to distinguish rtx from interest aggregation
 

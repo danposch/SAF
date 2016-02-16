@@ -5,6 +5,7 @@ using namespace nfd::fw;
 
 Mratio::Mratio(std::vector<int> faces) : SAFStatisticMeasure(faces)
 {
+  this->type = MeasureType::MThroughput;
 }
 
 void Mratio::logSatisfiedInterest(shared_ptr<pit::Entry> pitEntry,const Face& inFace, const Data& data)

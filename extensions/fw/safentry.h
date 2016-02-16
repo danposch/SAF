@@ -21,8 +21,7 @@
 #include "safstatisticmeasure.h"
 #include "safforwardingtable.h"
 #include "fw/strategy.hpp"
-#include "mratio.h"
-#include "mdelay.h"
+#include "safmeasurefactory.h"
 
 namespace nfd
 {
@@ -42,7 +41,7 @@ public:
    * @param faces the faces
    * @param fibEntry the fib-entry
    */
-  SAFEntry(std::vector<int> faces, shared_ptr<fib::Entry> fibEntry);
+  SAFEntry(std::vector<int> faces, shared_ptr<fib::Entry> fibEntry, std::string prefix);
 
   /**
    * @brief determines the next hop for an interest

@@ -37,7 +37,11 @@ namespace fw
 
 class SAFStatisticMeasure
 {
+
 public:
+
+  enum MeasureType {MThroughput = 0, MDelay = 1, UNKOWN = 99};
+
   ~SAFStatisticMeasure();
 
   /**
@@ -267,6 +271,8 @@ protected:
   >SAFMesureMap;
 
   SAFMesureMap stats;
+
+  MeasureType type;
 
 };
 

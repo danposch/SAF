@@ -6,38 +6,29 @@
 namespace nfd {
 namespace fw {
 
-MDelay::MDelay(std::vector<int> faces) : SAFStatisticMeasure(faces)
+MDelay::MDelay(std::vector<int> faces, int max_delay_ms) : Mratio(faces)
 {
-    curMaxDelay = boost::chrono::duration<long int, boost::ratio<1l, 1000000000l> >(
-                (long) (ParameterConfiguration::getInstance()->getParameter("MAX_DELAY_MS")) * 1000000);
+  this->type = MeasureType::MDelay;
+  /*curMaxDelay = boost::chrono::duration<long int, boost::ratio<1l, 1000000000l> >(
+              (long) max_delay_ms * 1000000);*/
+  curMaxDelay = max_delay_ms;
 }
 
 void MDelay::logSatisfiedInterest(shared_ptr<pit::Entry> pitEntry,const Face& inFace, const Data& data)
 {
-  //TODO: check if rtt < max_delay
-  time::steady_clock::TimePoint now = time::steady_clock::now();
+  //time::steady_clock::TimePoint now = time::steady_clock::now();
+  int now = ns3::Simulator::Now ().GetMilliSeconds ();
+
   std::list<nfd::pit::OutRecord>::const_iterator outRecord = pitEntry->getOutRecord(inFace);
 
-  time::steady_clock::Duration rtt = boost::chrono::duration<long int, boost::ratio<1l, 1000000000l> >(now - outRecord->getLastRenewed());
+  //time::steady_clock::Duration rtt = boost::chrono::duration<long int, boost::ratio<1l, 1000000000l> >(now - outRecord->getLastRenewed());
+  int out_rec_ms = boost::chrono::duration_cast<boost::chrono::milliseconds>(outRecord->getLastRenewed().time_since_epoch ()).count();
+  int rtt = now - out_rec_ms;
 
-  if (rtt > curMaxDelay) {
-    logExpiredInterest(pitEntry);
-  }
-  else {
-    int ilayer = SAFStatisticMeasure::determineContentLayer(pitEntry->getInterest());
-    stats[ilayer].satisfied_requests[inFace.getId ()] += 1;
-  }
-}
-
-void MDelay::logExpiredInterest(shared_ptr<pit::Entry> pitEntry)
-{
-  int ilayer = SAFStatisticMeasure::determineContentLayer(pitEntry->getInterest());
-
-  const nfd::pit::OutRecordCollection records = pitEntry->getOutRecords();
-  for(nfd::pit::OutRecordCollection::const_iterator it = records.begin (); it!=records.end (); ++it)
-  {
-    stats[ilayer].unsatisfied_requests[(*it).getFace()->getId()] += 1;
-  }
+  if (rtt > curMaxDelay)
+    Mratio::logExpiredInterest(pitEntry);
+  else
+    Mratio::logSatisfiedInterest(pitEntry,inFace, data);
 }
 
 }

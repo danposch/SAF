@@ -7,6 +7,7 @@ NS_LOG_COMPONENT_DEFINE("SAFStatisticMeasure");
 
 SAFStatisticMeasure::SAFStatisticMeasure(std::vector<int> faces)
 {
+  this->type = MeasureType::UNKOWN;
   this->faces = faces;
 
   // initalize

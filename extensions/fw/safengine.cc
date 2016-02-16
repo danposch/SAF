@@ -41,7 +41,7 @@ int SAFEngine::determineNextHop(const Interest& interest, std::vector<int> alrea
 
   if(entryMap.find(prefix) == entryMap.end ())
   {
-    entryMap[prefix] = boost::shared_ptr<SAFEntry>(new SAFEntry(faces, fibEntry));
+    entryMap[prefix] = boost::shared_ptr<SAFEntry>(new SAFEntry(faces, fibEntry, prefix));
 
     // add buckets for all faces
     for(FaceLimitMap::iterator it = fbMap.begin (); it != fbMap.end (); it++)

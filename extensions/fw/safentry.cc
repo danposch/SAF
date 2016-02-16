@@ -3,14 +3,13 @@
 using namespace nfd;
 using namespace nfd::fw;
 
-SAFEntry::SAFEntry(std::vector<int> faces, shared_ptr<fib::Entry> fibEntry)
+SAFEntry::SAFEntry(std::vector<int> faces, shared_ptr<fib::Entry> fibEntry, std::string prefix)
 {
   this->fibEntry = fibEntry;
   this->faces = faces;
   initFaces();
 
-  smeasure = boost::shared_ptr<Mratio>(new Mratio(this->faces));
-  //smeasure = boost::shared_ptr<MDelay>(new MDelay(this->faces));
+  smeasure = SAFMeasureFactory::getInstance ()->getMeasure (prefix, faces);
   ftable = boost::shared_ptr<SAFForwardingTable>(new SAFForwardingTable(this->faces, this->preferedFaces));
   fallbackCounter = 0;
 }
