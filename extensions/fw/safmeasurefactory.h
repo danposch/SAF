@@ -22,6 +22,7 @@
 
 #include "safstatisticmeasure.h"
 #include "mdelay.h"
+#include "mhop.h"
 #include "tuple"
 
 namespace nfd

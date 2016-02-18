@@ -40,7 +40,7 @@ class SAFStatisticMeasure
 
 public:
 
-  enum MeasureType {MThroughput = 0, MDelay = 1, UNKOWN = 99};
+  enum MeasureType {MThroughput = 0, MDelay = 1, MHop = 2, UNKOWN = 99};
 
   ~SAFStatisticMeasure();
 

@@ -91,7 +91,7 @@ void SAF::afterReceiveInterest(const Face& inFace, const Interest& interest ,sha
 }
 
 void SAF::beforeSatisfyInterest(shared_ptr<pit::Entry> pitEntry,const Face& inFace, const Data& data)
-{
+{  
   const std::list<nfd::pit::OutRecord> outRecords = pitEntry->getOutRecords ();
   for(nfd::pit::OutRecordCollection::const_iterator it = outRecords.begin (); it!=outRecords.end (); ++it)
   {
