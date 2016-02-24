@@ -29,6 +29,8 @@
 #include "face/null-face.hpp"
 #include "available-strategies.hpp"
 
+#include "utils/ndn-ns3-packet-tag.hpp"
+
 #include <boost/random/uniform_int_distribution.hpp>
 
 namespace nfd {
@@ -363,11 +365,15 @@ Forwarder::onIncomingData(Face& inFace, const Data& data)
     return;
   }
 
+  //remove hop count tag:
+  shared_ptr<Data> dataCopyWithoutPacket = make_shared<Data>(data);
+  dataCopyWithoutPacket->removeTag<ns3::ndn::Ns3PacketTag>();
+
   // CS insert
   if (m_csFromNdnSim == nullptr)
-    m_cs.insert(data);
+    m_cs.insert(*dataCopyWithoutPacket);
   else
-    m_csFromNdnSim->Add(data.shared_from_this());
+    m_csFromNdnSim->Add(dataCopyWithoutPacket);
 
   std::set<shared_ptr<Face> > pendingDownstreams;
   // foreach PitEntry
