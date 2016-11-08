@@ -35,6 +35,9 @@ The code is provided under the GNU General Public License Version 3.
 		* git clone https://github.com/danposch/SAF.git
 
 	# (RECOMMENDED) checkout verified compatible versions to SAF project
+		* cd ns-3
+		* git checkout 4e388e47d715c3206374974a40cbab7ce428936f
+		* cd ..
 		* cd ndn-cxx
 		* git checkout ndn-cxx-0.3.2
 		* cd ../
