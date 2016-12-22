@@ -52,10 +52,10 @@ The code is provided under the GNU General Public License Version 3.
 		* cp SAF/extern/strategy.hpp ns-3/src/ndnSIM/NFD/daemon/fw/strategy.hpp
 
 	# Patch ndnSIM content store for iNRR
-		* cp itec-ndn/extern/ndn-content-store.hpp ns-3/src/ndnSIM/model/cs/ndn-content-store.hpp
-		* cp itec-ndn/extern/content-store-impl.hpp ns-3/src/ndnSIM/model/cs/content-store-impl.hpp
-		* cp itec-ndn/extern/content-store-nocache.hpp ns-3/src/ndnSIM/model/cs/content-store-nocache.hpp
-		* cp itec-ndn/extern/content-store-nocache.cpp ns-3/src/ndnSIM/model/cs/content-store-nocache.cpp
+		* cp SAF/extern/ndn-content-store.hpp ns-3/src/ndnSIM/model/cs/ndn-content-store.hpp
+		* cp SAF/extern/content-store-impl.hpp ns-3/src/ndnSIM/model/cs/content-store-impl.hpp
+		* cp SAF/extern/content-store-nocache.hpp ns-3/src/ndnSIM/model/cs/content-store-nocache.hpp
+		* cp SAF/extern/content-store-nocache.cpp ns-3/src/ndnSIM/model/cs/content-store-nocache.cpp
 
 	# Build NDN-CXX
 		* cd ndn-cxx
