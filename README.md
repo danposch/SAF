@@ -47,7 +47,7 @@ The code is provided under the GNU General Public License Version 3.
 
 	# Patch NFD forwarder required for SAF and OMP-IF
 		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.cpp
-		* cp SAF/extern/forwarder.cpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.hpp
+		* cp SAF/extern/forwarder.hpp ns-3/src/ndnSIM/NFD/daemon/fw/forwarder.hpp
 		* cp SAF/extern/strategy.cpp ns-3/src/ndnSIM/NFD/daemon/fw/strategy.cpp
 		* cp SAF/extern/strategy.hpp ns-3/src/ndnSIM/NFD/daemon/fw/strategy.hpp
 
